@@ -2,34 +2,23 @@ pipeline {
     agent any
 
     environment {
-        KUBECONFIG = "${HOME}/.kube/config" // Adjust path if needed
+        KUBECONFIG = "/var/jenkins_home/.kube/config"  // use the kubeconfig in the repo
     }
 
-
-        stage('Deploy to Minikube') {
+    stages {
+        stage('Show kubeconfig info') {
             steps {
-                sh '''
-                    kubectl apply -f deployments.yaml
-                    kubectl apply -f NodePort.yaml
-                '''
+                sh 'kubectl config get-contexts'
             }
         }
 
-        stage('Verify Deployment') {
+        stage('Apply Deployment and Service') {
             steps {
                 sh '''
-                    kubectl get deployments
-                    kubectl get svc -o wide
+                    kubectl apply -f nginx-deployment.yaml
+                    kubectl apply -f nginx-service.yaml
                 '''
             }
         }
     }
-
-    post {
-        failure {
-            echo 'Deployment failed!'
-        }
-        success {
-            echo 'Deployment successful!'
-        }
-    }
+}
