@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'DEPLOY_ENV', defaultValue: 'dev', description: 'Environment to deploy to')
+        booleanParam(name: 'ENABLE_DEBUG', defaultValue: false, description: 'Enable debug mode')
+        choice(name: 'REGION', choices: ['us-east-1', 'us-west-2'], description: 'Deployment region')
+    }
+
+    stages {
+        stage('Print Parameters') {
+            steps {
+                echo "Deploying to: ${params.DEPLOY_ENV}"
+                echo "Debug mode: ${params.ENABLE_DEBUG}"
+                echo "Region: ${params.REGION}"
+            }
+        }
+    }
+}
