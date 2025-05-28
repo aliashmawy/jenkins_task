@@ -15,8 +15,8 @@ pipeline {
         stage('Apply Deployment and Service') {
             steps {
                 sh '''
-                    kubectl apply -f deployments.yaml
-                    kubectl apply -f NodePort.yaml
+                    kubectl apply -f day3/task1/deployments.yaml
+                    kubectl apply -f day3/task1/NodePort.yaml
                 '''
             }
         }
