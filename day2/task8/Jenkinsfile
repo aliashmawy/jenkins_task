@@ -7,20 +7,19 @@ pipeline {
     }
 
     stages {
-        stage('List Files') {
-    steps {
-        sh 'ls -la'
-        }
-        }
 
         stage('Terraform Init') {
             steps {
-                sh 'terraform init'
+                dir('day2/task8'){
+                    sh 'terraform init'
+                }
+               
             }
         }
 
         stage('Terraform Apply') {
             steps {
+                dir('day2/task8'){
                 sh 'terraform apply -auto-approve'
             }
         }
