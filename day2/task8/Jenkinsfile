@@ -7,15 +7,6 @@ pipeline {
     }
 
     stages {
-        stage('Install Dependencies') {
-            steps {
-                sh '''
-                which terraform || apt-get install -y terraform
-                which ansible || apt-get install -y ansible
-                '''
-            }
-        }
-
         stage('Terraform Init') {
             steps {
                 sh 'terraform init'
