@@ -109,7 +109,7 @@ resource "aws_instance" "web" {
   command = <<EOT
     echo "Waiting 200 seconds for EC2 to initialize..."
     sleep 200
-    ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook --inventory '${aws_instance.web.public_ip},' playbook.yaml --private-key ~/Downloads/vockey3.pem --user ubuntu
+    ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook --inventory '${aws_instance.web.public_ip},' playbook.yaml --private-key /var/jenkins_home/vockey3.pem --user ubuntu
 EOT
 }
 
