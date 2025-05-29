@@ -10,8 +10,8 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-                which terraform || sudo apt-get install -y terraform
-                which ansible || sudo apt-get install -y ansible
+                which terraform || apt-get install -y terraform
+                which ansible || apt-get install -y ansible
                 '''
             }
         }
