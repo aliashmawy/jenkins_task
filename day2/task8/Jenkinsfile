@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+
+    environment {
+        TF_VAR_aws_access_key = credentials('access_key')
+        TF_VAR_aws_secret_key = credentials('secret_key') 
+    }
+
+    stages {
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                which terraform || sudo apt-get install -y terraform
+                which ansible || sudo apt-get install -y ansible
+                '''
+            }
+        }
+
+        stage('Terraform Init') {
+            steps {
+                sh 'terraform init'
+            }
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                sh 'terraform apply -auto-approve'
+            }
+        }
+    }
+}
