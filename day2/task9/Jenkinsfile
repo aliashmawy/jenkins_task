@@ -21,6 +21,7 @@ pipeline {
             steps {
                 script {
                     def command = """
+                        pwd
                         ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${BASTION_HOST} \\
                         ssh -o StrictHostKeyChecking=no ${PRIVATE_HOST} 'bash -s' < script.sh
                     """
