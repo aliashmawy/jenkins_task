@@ -2,39 +2,29 @@ pipeline {
     agent any
 
     environment {
-        AWS_ACCESS_KEY_ID     = credentials('access_key_outlook_acc')
-        AWS_SECRET_ACCESS_KEY = credentials('secret_key_outlook_acc')
-        AWS_REGION = 'us-east-1'
-        S3_BUCKET = 'another-account-trial3421'
-        S3_KEY = 'scripts/script.sh'
-        INSTANCE_ID = 'i-097c4710bd565e4ac'
-        SCRIPT_PATH = '/var/jenkins_home/script.sh'
+        
+        BASTION_HOST = "ubuntu@3.88.50.28"
+        PRIVATE_HOST = "ubuntu@172.31.150.22"
+        SSH_KEY = credentials('vockey1')
+        SCRIPT_FILE_ID = 'task9_script'
     }
 
     stages {
-        stage('Upload script to S3') {
-            steps {
-                script {
-                    sh """
-                    echo "Uploading script to S3..."
-                    aws s3 cp ${SCRIPT_PATH} s3://${S3_BUCKET}/${S3_KEY} --region ${AWS_REGION}
-                    """
-                }
+        stage('Prepare Script') {
+        steps {
+            configFileProvider([configFile(fileId: "${SCRIPT_FILE_ID}", targetLocation: 'script.sh')]) {
+                sh 'chmod +x script.sh'
             }
         }
-
-        stage('Execute script via SSM') {
+    }
+        stage('Run Script on Private EC2') {
             steps {
                 script {
-                    sh """
-                    echo "Sending command to EC2 via SSM..."
-                    aws ssm send-command \
-                        --instance-ids "${INSTANCE_ID}" \
-                        --document-name "AWS-RunShellScript" \
-                        --comment "Run script from S3" \
-                        --parameters 'commands=["aws s3 cp s3://${S3_BUCKET}/${S3_KEY} /tmp/myscript.sh","chmod +x /tmp/myscript.sh","/tmp/myscript.sh"]' \
-                        --region ${AWS_REGION}
+                    def command = """
+                        ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${BASTION_HOST} \\
+                        ssh -o StrictHostKeyChecking=no ${PRIVATE_HOST} 'bash -s' < script.sh
                     """
+                    sh command
                 }
             }
         }
