@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        AWS_ACCESS_KEY_ID     = credentials('access_key')
-        AWS_SECRET_ACCESS_KEY = credentials('secret_key')
+        AWS_ACCESS_KEY_ID     = credentials('access_key_outlook_acc')
+        AWS_SECRET_ACCESS_KEY = credentials('secret_key_outlook_acc')
         AWS_REGION = 'us-east-1'
         S3_BUCKET = 'another-account-trial3421'
         S3_KEY = 'scripts/script.sh'
