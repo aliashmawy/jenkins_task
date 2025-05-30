@@ -1,0 +1,38 @@
+pipeline {
+     agent {
+    docker {
+      image 'docker:24.0.2-cli'
+      args '-v /var/run/docker.sock:/var/run/docker.sock -u root'
+    }
+    }  
+
+    stages {
+        stage('check') {
+            steps {
+                echo "checking your code"
+                
+               
+            }
+        }
+
+        stage('docker build') {
+            steps {
+                echo "building dockerfile"
+                sh "docker build -t aliashmawy/day3_task2:${env.BUILD_NUMBER} day3/task2"
+                 
+            }
+        }
+        
+        stage('docker push') {  
+            steps {
+                echo "docker push is running now"
+                withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh "echo $PASSWORD | docker login -u $USERNAME --password-stdin"
+                    sh "docker push aliashmawy/day3_task2:${env.BUILD_NUMBER}"
+                    
+                }
+            }
+        }    
+    }
+
+}
