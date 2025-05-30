@@ -22,7 +22,6 @@ pipeline {
                 script {
                     def command = """
                         ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${BASTION_HOST} \\
-                        pwd
                         ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${PRIVATE_HOST} 'bash -s' < script.sh
                     """
                     sh command
