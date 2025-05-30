@@ -1,0 +1,12 @@
+pipeline {
+    agent { label 'linux' }
+
+    stages {
+        stage('Example') {
+            steps {
+                sh 'echo Running on EC2 slave node'
+                sh 'uname -a'
+            }
+        }
+    }
+}
